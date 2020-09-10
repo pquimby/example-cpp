@@ -17,6 +17,7 @@
  **/
 
 int SERVER_PORT = 8000; // Or whatever you want, 8000 is commonly available
+long long total_steps = 0;
 
 int main(int argc, char* argv[]) {
 
@@ -52,7 +53,7 @@ int main(int argc, char* argv[]) {
   // Start asking for connections
   while (true) {
     printf("Waiting for network traffic...\n");
-    char buffer[8]; // Some tiny amount of temp storage for the payload
+    char buffer[32]; // Some tiny amount of temp storage for the length payload
 
     // Read the content into buffer from an incoming client
     int len = recvfrom(sock, buffer, sizeof(buffer)-1, 0,
@@ -78,6 +79,10 @@ int main(int argc, char* argv[]) {
 
     // Do something in response to the packet
     printf("Move the motor by %d steps now.\n", steps);
+
+    // Update the total running steps
+    total_steps += steps;
+    printf("The motor is now at %llu steps.\n", total_steps);
   }
 
   // This will never happen due to the infinite loop, but for good measure return 0.
